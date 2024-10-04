@@ -3,10 +3,25 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
+use std::fmt::{Debug};
+use std::cmp;
 
-fn sort<T>(array: &mut [T]){
+fn sort<T: Ord + Debug>(array: &mut [T]){
 	//TODO
+    let len = array.len();
+    let mut check = 0;
+    println!("{}:{}<->{}:{:?}", check, 0, 0, array);
+    while check < len {
+        let mut first_swap = len;
+        for i in check..array.len()-1 {
+            if array[i] > array[i+1] {
+                array.swap(i, i + 1);
+                first_swap = cmp::min(first_swap, cmp::max(1, i)-1);
+                println!("{}:{}<->{}:{:?}", first_swap, i, i+1, array);
+            }
+        }
+        check = first_swap;    
+    }
 }
 #[cfg(test)]
 mod tests {
@@ -17,6 +32,7 @@ mod tests {
         let mut vec = vec![37, 73, 57, 75, 91, 19, 46, 64];
         sort(&mut vec);
         assert_eq!(vec, vec![19, 37, 46, 57, 64, 73, 75, 91]);
+        //assert!(false);
     }
 	#[test]
     fn test_sort_2() {

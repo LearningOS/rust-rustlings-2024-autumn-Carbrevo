@@ -6,16 +6,16 @@
 // Execute `rustlings hint iterators2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 // Step 1.
 // Complete the `capitalize_first` function.
 // "hello" -> "Hello"
-pub fn capitalize_first(input: &str) -> String {
-    let mut c = input.chars();
-    match c.next() {
-        None => String::new(),
-        Some(first) => ???,
+pub fn capitalize_first(input: &&str) -> String {
+    if input.len() <= 0 {
+        String::new()
+    } else {
+        let mut res = input.to_string();
+        res[0..1].make_ascii_uppercase();
+        res    
     }
 }
 
@@ -24,7 +24,7 @@ pub fn capitalize_first(input: &str) -> String {
 // Return a vector of strings.
 // ["hello", "world"] -> ["Hello", "World"]
 pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
-    vec![]
+    (*words).iter().map(capitalize_first).collect::<Vec<String>>()
 }
 
 // Step 3.
@@ -32,7 +32,7 @@ pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
 // Return a single string.
 // ["hello", " ", "world"] -> "Hello World"
 pub fn capitalize_words_string(words: &[&str]) -> String {
-    String::new()
+    words.iter().map(capitalize_first).fold(String::new(), |res, s| res+s.as_str())
 }
 
 #[cfg(test)]
@@ -41,12 +41,12 @@ mod tests {
 
     #[test]
     fn test_success() {
-        assert_eq!(capitalize_first("hello"), "Hello");
+        assert_eq!(capitalize_first(&"hello"), "Hello");
     }
 
     #[test]
     fn test_empty() {
-        assert_eq!(capitalize_first(""), "");
+        assert_eq!(capitalize_first(&""), "", "empty:'{}'", capitalize_first(&""));
     }
 
     #[test]
@@ -58,6 +58,7 @@ mod tests {
     #[test]
     fn test_iterate_into_string() {
         let words = vec!["hello", " ", "world"];
-        assert_eq!(capitalize_words_string(&words), "Hello World");
+        assert_eq!(capitalize_words_string(&words), "Hello World",
+                    "res='{}'", capitalize_words_string(&words));
     }
 }

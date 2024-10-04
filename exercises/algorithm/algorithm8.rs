@@ -2,7 +2,6 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -20,7 +19,7 @@ impl<T> Queue<T> {
         self.elements.push(value)
     }
 
-    pub fn dequeue(&mut self) -> Result<T, &str> {
+    pub fn dequeue(&mut self) -> Result<T, &'static str> {
         if !self.elements.is_empty() {
             Ok(self.elements.remove(0usize))
         } else {
@@ -52,6 +51,7 @@ impl<T> Default for Queue<T> {
     }
 }
 
+#[allow(non_camel_case_types)]
 pub struct myStack<T>
 {
 	//TODO
@@ -68,14 +68,40 @@ impl<T> myStack<T> {
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+        if self.q1.is_empty() {
+            self.q2.enqueue(elem);
+        } else {
+            self.q1.enqueue(elem);
+        }
     }
+    //#[cfg(experiment)]
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
-		Err("Stack is empty")
+		//Err("Stack is empty")
+        let accs_q;
+        let back_q;
+        if self.q1.is_empty() {
+            accs_q = &mut self.q2;
+            back_q = &mut self.q1;
+        } else {
+            accs_q = &mut self.q1;
+            back_q = &mut self.q2;
+        }
+
+        let mut slob = accs_q.dequeue().map_err(|x|"Stack is empty")?;
+        loop {
+            if accs_q.is_empty() {
+                break;
+            }
+            back_q.enqueue(slob);
+            slob = accs_q.dequeue().unwrap();
+        }
+        Ok(slob)
     }
+
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+        self.q1.is_empty() && self.q2.is_empty()
     }
 }
 
